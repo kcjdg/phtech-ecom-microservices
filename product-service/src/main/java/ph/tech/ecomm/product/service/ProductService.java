@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ph.tech.ecomm.product.dto.ProductRequest;
+import ph.tech.ecomm.product.dto.ProductResponse;
 import ph.tech.ecomm.product.model.Product;
 import ph.tech.ecomm.product.repository.ProductRepository;
 
@@ -16,7 +17,7 @@ import java.util.List;
 public class ProductService {
     private final ProductRepository productRepository;
 
-    public Product createProduct(ProductRequest productRequest) {
+    public ProductResponse createProduct(ProductRequest productRequest) {
         var product = Product.builder()
                 .name(productRequest.name())
                 .description(productRequest.description())
@@ -24,11 +25,14 @@ public class ProductService {
                 .build();
         productRepository.save(product);
         log.info("Product created succesfully");
-        return product;
+        return  new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getDescription());
     }
 
 
-    public List<Product> getAllProducts() {
-        return productRepository.findAll();
+    public List<ProductResponse> getAllProducts() {
+        return productRepository.findAll()
+                .stream()
+                .map(product -> new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getDescription()))
+                .toList();
     }
 }
