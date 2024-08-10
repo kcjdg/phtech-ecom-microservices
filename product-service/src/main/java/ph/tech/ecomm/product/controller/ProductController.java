@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ph.tech.ecomm.product.dto.ProductRequest;
-import ph.tech.ecomm.product.model.Product;
+import ph.tech.ecomm.product.dto.ProductResponse;
 import ph.tech.ecomm.product.service.ProductService;
 
 import java.util.List;
@@ -18,14 +18,14 @@ public class ProductController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void createProduct(@RequestBody ProductRequest productRequest) {
-        productService.createProduct(productRequest);
+    public ProductResponse createProduct(@RequestBody ProductRequest productRequest) {
+        return productService.createProduct(productRequest);
     }
 
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<Product> getAllProducts() {
+    public List<ProductResponse> getAllProducts() {
         return productService.getAllProducts();
     }
 
