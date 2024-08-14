@@ -20,19 +20,20 @@ public class ProductService {
     public ProductResponse createProduct(ProductRequest productRequest) {
         var product = Product.builder()
                 .name(productRequest.name())
+                .skuCode(productRequest.skuCode())
                 .description(productRequest.description())
                 .price(productRequest.price())
                 .build();
         productRepository.save(product);
         log.info("Product created succesfully");
-        return  new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getDescription());
+        return  new ProductResponse(product.getId(), product.getName(), product.getSkuCode(), product.getPrice(), product.getDescription());
     }
 
 
     public List<ProductResponse> getAllProducts() {
         return productRepository.findAll()
                 .stream()
-                .map(product -> new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getDescription()))
+                .map(product -> new ProductResponse(product.getId(), product.getName(),product.getSkuCode(), product.getPrice(), product.getDescription()))
                 .toList();
     }
 }

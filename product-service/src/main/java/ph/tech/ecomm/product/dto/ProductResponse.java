@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 
 public record ProductResponse(String id
         , String name
+        , String skuCode
         , BigDecimal price
         , String description) {
 }
