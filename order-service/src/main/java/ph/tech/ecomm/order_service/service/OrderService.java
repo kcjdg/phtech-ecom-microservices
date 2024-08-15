@@ -4,9 +4,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
+import ph.tech.ecomm.order.event.OrderPlacedEvent;
 import ph.tech.ecomm.order_service.client.InventoryClient;
 import ph.tech.ecomm.order_service.dto.OrderRequest;
-import ph.tech.ecomm.order_service.event.OrderPlacedEvent;
+
 import ph.tech.ecomm.order_service.model.Order;
 import ph.tech.ecomm.order_service.repository.OrderRepository;
 
@@ -33,7 +34,11 @@ public class OrderService {
             orderRepository.save(order);
 
             //send the message to kafka
-            OrderPlacedEvent orderPlacedEvent = new OrderPlacedEvent(order.getOrderNumber(), orderRequest.userDetails().email());
+            OrderPlacedEvent orderPlacedEvent = new OrderPlacedEvent();
+            orderPlacedEvent.setOrderNumber(order.getOrderNumber());
+            orderPlacedEvent.setEmail(orderRequest.userDetails().email());
+            orderPlacedEvent.setFirstName(orderRequest.userDetails().firstName());
+            orderPlacedEvent.setLastName(orderRequest.userDetails().lastName());
             log.info("Start - Sending OrderPlacedEvent {} to Kafka order-placed", orderPlacedEvent);
             kafkaTemplate.send("order-placed", orderPlacedEvent);
             log.info("End - Sending OrderPlacedEvent {} to Kafka order-placed", orderPlacedEvent);
