@@ -1,5 +1,7 @@
 package ph.tech.ecomm.order_service.config;
 
+import io.micrometer.observation.ObservationRegistry;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.ClientHttpRequestFactories;
 import org.springframework.boot.web.client.ClientHttpRequestFactorySettings;
@@ -14,16 +16,19 @@ import ph.tech.ecomm.order_service.client.InventoryClient;
 import java.time.Duration;
 
 @Configuration
+@RequiredArgsConstructor
 public class RestClientConfig {
 
     @Value("${inventory-url}")
     private  String inventoryServiceUrl;
+    private final ObservationRegistry observationRegistry;
 
     @Bean
     public InventoryClient inventoryClient(){
         RestClient restClient = RestClient.builder()
                 .baseUrl(inventoryServiceUrl)
                 .requestFactory(getClientRequestFactory())
+                .observationRegistry(observationRegistry)
                 .build();
         var restClientAdapter = RestClientAdapter.create(restClient);
         var httpsServiceProxyFactory = HttpServiceProxyFactory.builderFor(restClientAdapter).build();
