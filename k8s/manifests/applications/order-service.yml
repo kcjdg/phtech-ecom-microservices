@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: order-service
-          image: cucumberlemon/order-service:0.0.2-SNAPSHOT
+          image: cucumberlemon/order-service:0.0.5-SNAPSHOT
           env:
             - name: SPRING_KAFKA_BOOTSTRAP-SERVERS
               valueFrom:
